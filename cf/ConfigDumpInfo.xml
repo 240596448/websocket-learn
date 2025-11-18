@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ConfigDumpInfo xmlns="http://v8.1c.ru/8.3/xcf/dumpinfo" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" format="Hierarchical" version="2.20">
+	<ConfigVersions>
+		<Metadata name="Configuration.WebSocketLearn" id="f3fe51db-d909-4636-a18e-49e946b8cdae" configVersion="8828a15b776c0840913628c5b9e5881700000000"/>
+		<Metadata name="DataProcessor.УправлениеWebSockets" id="690cf8a1-bd76-4838-84cd-5906996d4931" configVersion="1a70a7ecff572f4381f7b12a8c73639a00000000"/>
+		<Metadata name="DataProcessor.УправлениеWebSockets.Form.Форма" id="8b0e7b43-9321-44a6-ad91-882b1de20b19" configVersion="77d89d8adafaf948a92d17553910bd5100000000"/>
+		<Metadata name="DataProcessor.УправлениеWebSockets.Form.Форма.Form" id="8b0e7b43-9321-44a6-ad91-882b1de20b19.0" configVersion="70c1ca266f8ce44dad208e8caf5a0dd200000000"/>
+		<Metadata name="Language.Русский" id="a2f8d1dd-f46d-4f5d-86b5-f30f24ff5745" configVersion="7d395018446ce644b208cb38eeace00e00000000"/>
+		<Metadata name="WebSocketClient.WebSocketКлиент1" id="3b57f824-a80e-4963-b7d2-e2bbaeb75322" configVersion="b0e9610e0b78b8469bf12aab82f4715100000000"/>
+		<Metadata name="WebSocketClient.WebSocketКлиент1.Module" id="3b57f824-a80e-4963-b7d2-e2bbaeb75322.0" configVersion="0af31f40f7aeb44bbc8c49fa30b770a400000000"/>
+	</ConfigVersions>
+</ConfigDumpInfo>
