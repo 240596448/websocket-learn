@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Простой WebSocket клиент
 """
 import websocket
 import threading
-import queue
+from keyboard_input import KeyboardInputHandler
 
 
 def on_message(ws, message):
@@ -30,34 +28,13 @@ def on_open(ws):
     # Отправляем тестовое сообщение
     ws.send("Привет от клиента!")
     
-    # Можно отправлять сообщения в цикле
-    # for i in range(5):
-    #     time.sleep(1)
-    #     ws.send(f"Сообщение {i+1}")
-    # ws.close()
-
-
-def input_thread_func(message_queue, stop_event):
-    """Поток для ввода сообщений с клавиатуры"""
-    while not stop_event.is_set():
-        try:
-            message = input()
-            if message.strip():
-                message_queue.put(message)
-        except EOFError:
-            break
-        except KeyboardInterrupt:
-            stop_event.set()
-            break
-
 
 if __name__ == "__main__":
     # URL WebSocket сервера
     ws_url = "ws://127.0.0.1:8765"
     
-    # Очередь для сообщений из потока ввода
-    message_queue = queue.Queue()
-    stop_event = threading.Event()
+    # Создаем обработчик ввода с клавиатуры
+    keyboard_handler = KeyboardInputHandler()
     
     # Создаем WebSocket соединение
     ws = websocket.WebSocketApp(
@@ -76,27 +53,22 @@ if __name__ == "__main__":
     print("Введите сообщение и нажмите Enter для отправки. Ctrl+C для выхода.")
     
     # Запускаем поток для ввода с клавиатуры
-    input_thread = threading.Thread(target=input_thread_func, args=(message_queue, stop_event), daemon=True)
-    input_thread.start()
+    keyboard_handler.start()
     
     # Основной цикл: проверяем очередь и отправляем сообщения
     try:
-        while ws_thread.is_alive() and not stop_event.is_set():
-            try:
-                # Проверяем очередь с таймаутом, чтобы можно было обработать Ctrl+C
-                message = message_queue.get(timeout=0.1)
+        while ws_thread.is_alive() and not keyboard_handler.is_stopped():
+            # Получаем сообщение из очереди
+            message = keyboard_handler.get_message(timeout=0.1)
+            if message:
                 if ws.sock and ws.sock.connected:
                     ws.send(message)
                 else:
                     print("Соединение не установлено, сообщение не отправлено")
-            except queue.Empty:
-                continue
-            except KeyboardInterrupt:
-                stop_event.set()
-                break
     except KeyboardInterrupt:
-        stop_event.set()
+        keyboard_handler.stop()
     
     print("\nЗакрытие соединения...")
+    keyboard_handler.stop()
     ws.close()
 
