@@ -253,6 +253,7 @@
 			<SessionParameter>НачалоЗамера</SessionParameter>
 			<SessionParameter>КоличествоСообщений</SessionParameter>
 			<WebSocketClient>WebSocketКлиент1</WebSocketClient>
+			<Constant>Константа1</Constant>
 			<DataProcessor>УправлениеWebSockets</DataProcessor>
 		</ChildObjects>
 	</Configuration>
