@@ -48,7 +48,7 @@ def message_received(client, server, message):
             for i in range(num_messages):
                 server.send_message(client, f"__BENCHMARK_DATA__:{i}")
             
-            server.send_message(client, f"__BENCHMARK_END__")
+            server.send_message(client, f"__BENCHMARK_END__:{num_messages}")
 
             end_time = time.time()
             elapsed_time = end_time - start_time
