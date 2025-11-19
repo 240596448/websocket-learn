@@ -1,90 +1,107 @@
 """
 WebSocket сервер для замера производительности входящих сообщений
 """
-from websocket_server import WebsocketServer
+import websockets
+import asyncio
 import time
 import argparse
-import re
+from typing import Dict
+
+from ws_utils import parse_ws_url, run_websocket_server, get_client_id
+from ws_client_manager import ClientManager
 
 # Словарь для хранения статистики бенчмарка по клиентам
-benchmark_stats = {}
-
-def new_client(client, server):
-    """Вызывается когда новый клиент подключается"""
-    print(f"Новый клиент подключен: {client['id']}")
+benchmark_stats: Dict[websockets.WebSocketServerProtocol, dict] = {}
+# Менеджер подключений
+client_manager = ClientManager()
 
 
-def client_left(client, server):
-    """Вызывается когда клиент отключается"""
-    client_id = client['id']
+def on_client_connect(websocket: websockets.WebSocketServerProtocol):
+    """Callback при подключении клиента"""
+    client_id = get_client_id(websocket)
+    print(f"Новый клиент подключен: {client_id}")
+
+
+def on_client_disconnect(websocket: websockets.WebSocketServerProtocol):
+    """Callback при отключении клиента"""
+    client_id = get_client_id(websocket)
     print(f"Клиент отключен: {client_id}")
-    # Очищаем статистику бенчмарка для отключившегося клиента
-    global benchmark_stats
-    if client_id in benchmark_stats:
-        del benchmark_stats[client_id]
+    if websocket in benchmark_stats:
+        del benchmark_stats[websocket]
 
 
-def create_message_received(interval):
-    """Создает функцию обработки сообщений с параметром interval"""
-    def message_received(client, server, message):
-        """Вызывается когда получено сообщение от клиента"""
-        global benchmark_stats
-        client_id = client['id']
-        
-        # Обработка меток бенчмарка
-        if message == "__BENCHMARK_START__":
-            # Инициализируем статистику для клиента
-            benchmark_stats[client_id] = {
-                'start_time': time.time(),
-                'interval_start': time.time(),
-                'message_count': 0,
-                'interval_count': 0,
-                'interval': interval
-            }
-            print(f"\n{'='*60}")
-            print(f"Клиент {client_id}: Выполняется замер производительности...")
-            print(f"{'='*60}\n")
-            return
-        elif message == "__BENCHMARK_END__":
-            # Выводим финальную статистику
-            if client_id in benchmark_stats:
-                stats = benchmark_stats[client_id]
-                total_time = time.time() - stats['start_time']
-                total_rate = stats['message_count'] / total_time if total_time > 0 else 0
-                
+async def handle_client(websocket: websockets.WebSocketServerProtocol, path: str, interval: float):
+    """Обработка подключения клиента"""
+    client_id = get_client_id(websocket)
+    client_manager.add_client(websocket)
+    
+    try:
+        async for message in websocket:
+            # Обработка меток бенчмарка
+            if message == "__BENCHMARK_START__":
+                # Инициализируем статистику для клиента
+                benchmark_stats[websocket] = {
+                    'start_time': time.time(),
+                    'interval_start': time.time(),
+                    'message_count': 0,
+                    'interval_count': 0,
+                    'interval': interval
+                }
                 print(f"\n{'='*60}")
-                print(f"Клиент {client_id}: Замер завершен!")
-                print(f"Всего получено: {stats['message_count']} сообщений")
-                print(f"Общее время: {total_time:.2f} секунд")
-                print(f"Средняя скорость: {total_rate:.2f} сообщений/секунду")
+                print(f"Клиент {client_id}: Выполняется замер производительности...")
                 print(f"{'='*60}\n")
-                
-                # Удаляем статистику клиента
-                del benchmark_stats[client_id]
-            return
-        elif message.startswith("__BENCHMARK_DATA__"):
-            # Обновляем статистику и проверяем интервалы
-            if client_id in benchmark_stats:
-                stats = benchmark_stats[client_id]
-                stats['message_count'] += 1
-                stats['interval_count'] += 1
-                
-                # Проверяем, нужно ли вывести статистику за интервал
-                current_time = time.time()
-                if current_time - stats['interval_start'] >= stats['interval']:
-                    elapsed = current_time - stats['interval_start']
-                    rate = stats['interval_count'] / elapsed if elapsed > 0 else 0
-                    total_elapsed = current_time - stats['start_time']
-                    print(f"[Сервер] Клиент {client_id} [{total_elapsed:.1f}с] "
-                          f"Получено: {stats['interval_count']} сообщений за {elapsed:.1f}с "
-                          f"({rate:.2f} сообщений/сек)")
-                    stats['interval_start'] = current_time
-                    stats['interval_count'] = 0
-            return
-    return message_received
+                continue
+            elif message == "__BENCHMARK_END__":
+                # Выводим финальную статистику
+                if websocket in benchmark_stats:
+                    stats = benchmark_stats[websocket]
+                    total_time = time.time() - stats['start_time']
+                    total_rate = stats['message_count'] / total_time if total_time > 0 else 0
+                    
+                    print(f"\n{'='*60}")
+                    print(f"Клиент {client_id}: Замер завершен!")
+                    print(f"Всего получено: {stats['message_count']} сообщений")
+                    print(f"Общее время: {total_time:.2f} секунд")
+                    print(f"Средняя скорость: {total_rate:.2f} сообщений/секунду")
+                    print(f"{'='*60}\n")
+                    
+                    # Удаляем статистику клиента
+                    del benchmark_stats[websocket]
+                continue
+            elif message.startswith("__BENCHMARK_DATA__"):
+                # Обновляем статистику и проверяем интервалы
+                if websocket in benchmark_stats:
+                    stats = benchmark_stats[websocket]
+                    stats['message_count'] += 1
+                    stats['interval_count'] += 1
+                    
+                    # Проверяем, нужно ли вывести статистику за интервал
+                    current_time = time.time()
+                    if current_time - stats['interval_start'] >= stats['interval']:
+                        elapsed = current_time - stats['interval_start']
+                        rate = stats['interval_count'] / elapsed if elapsed > 0 else 0
+                        total_elapsed = current_time - stats['start_time']
+                        print(f"[Сервер] Клиент {client_id} [{total_elapsed:.1f}с] "
+                              f"Получено: {stats['interval_count']} сообщений за {elapsed:.1f}с "
+                              f"({rate:.2f} сообщений/сек)")
+                        stats['interval_start'] = current_time
+                        stats['interval_count'] = 0
+                continue
+    except websockets.exceptions.ConnectionClosed:
+        pass
+    finally:
+        # Очищаем статистику при отключении клиента
+        client_manager.remove_client(websocket)
 
 
-if __name__ == "__main__":
+def create_handler(interval: float):
+    """Создает обработчик с параметром interval"""
+    async def handler(websocket: websockets.WebSocketServerProtocol, path: str):
+        await handle_client(websocket, path, interval)
+    return handler
+
+
+async def main():
     # Парсинг аргументов командной строки
     parser = argparse.ArgumentParser(description="WebSocket сервер для замера производительности входящих сообщений")
     parser.add_argument("--benchmark", action="store_true", 
@@ -99,31 +116,32 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     # Парсим URL для извлечения host и port
-    url_pattern = re.compile(r'ws://([^:]+):(\d+)')
-    match = url_pattern.match(args.url)
-    if not match:
+    url_result = parse_ws_url(args.url)
+    if not url_result:
         print(f"Ошибка: неверный формат URL: {args.url}")
         print("Ожидается формат: ws://host:port")
-        exit(1)
+        return
     
-    host = match.group(1)
-    port = int(match.group(2))
+    host, port = url_result
     
-    # Создаем сервер
-    server = WebsocketServer(host=host, port=port)
+    # Настраиваем callbacks для менеджера клиентов
+    client_manager.set_on_connect(on_client_connect)
+    client_manager.set_on_disconnect(on_client_disconnect)
     
-    # Создаем функцию обработки сообщений с параметром interval
-    message_handler = create_message_received(args.interval)
+    # Создаем обработчик с параметром interval
+    handler = create_handler(args.interval)
     
-    server.set_fn_new_client(new_client)
-    server.set_fn_client_left(client_left)
-    server.set_fn_message_received(message_handler)
+    startup_message = (
+        f"WebSocket сервер запущен на ws://{host}:{port}\n"
+        "Ожидание подключений для замера производительности..."
+    )
     
-    print(f"WebSocket сервер запущен на ws://{host}:{port}")
-    print("Ожидание подключений для замера производительности...")
-    
-    # Запускаем сервер в текущем потоке (блокирующий вызов)
+    # Запускаем сервер
+    await run_websocket_server(handler, host, port, startup_message)
+
+
+if __name__ == "__main__":
     try:
-        server.run_forever()
+        asyncio.run(main())
     except KeyboardInterrupt:
         print("\nОстановка сервера...")
