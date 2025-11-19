@@ -250,6 +250,8 @@
 		</Properties>
 		<ChildObjects>
 			<Language>Русский</Language>
+			<SessionParameter>НачалоЗамера</SessionParameter>
+			<SessionParameter>КоличествоСообщений</SessionParameter>
 			<WebSocketClient>WebSocketКлиент1</WebSocketClient>
 			<DataProcessor>УправлениеWebSockets</DataProcessor>
 		</ChildObjects>
