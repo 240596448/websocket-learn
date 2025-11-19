@@ -1,15 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ConfigDumpInfo xmlns="http://v8.1c.ru/8.3/xcf/dumpinfo" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" format="Hierarchical" version="2.20">
 	<ConfigVersions>
-		<Metadata name="Configuration.WebSocketLearn" id="f3fe51db-d909-4636-a18e-49e946b8cdae" configVersion="72b0a1a7b27ae243a51eaf80d52a378a00000000"/>
-		<Metadata name="Configuration.WebSocketLearn.SessionModule" id="be0273d9-146c-45c9-b40f-6caa78c66ee4.7" configVersion="968725c6c1e3b6498fdb234f9b693aff00000000"/>
-		<Metadata name="DataProcessor.УправлениеWebSockets" id="690cf8a1-bd76-4838-84cd-5906996d4931" configVersion="a7ec8d7beb564544955294772edfc21f00000000"/>
-		<Metadata name="DataProcessor.УправлениеWebSockets.Form.Форма" id="8b0e7b43-9321-44a6-ad91-882b1de20b19" configVersion="3cd50fe156ed3e45baf9cd9a728485d900000000"/>
-		<Metadata name="DataProcessor.УправлениеWebSockets.Form.Форма.Form" id="8b0e7b43-9321-44a6-ad91-882b1de20b19.0" configVersion="cce570db9ff3f14eb96f325526f51e7700000000"/>
-		<Metadata name="Language.Русский" id="a2f8d1dd-f46d-4f5d-86b5-f30f24ff5745" configVersion="5c1a4e4a39030044b1d9297fc925e8a800000000"/>
-		<Metadata name="SessionParameter.КоличествоСообщений" id="398b8b1a-6b67-4041-a09a-81937b694644" configVersion="ad527b20414bac4e8c07d04d7e84bea000000000"/>
-		<Metadata name="SessionParameter.НачалоЗамера" id="578af259-abda-417c-ae80-75d116517f60" configVersion="fe9aa2d90e17ee4ea58b9aed9847532300000000"/>
-		<Metadata name="WebSocketClient.WebSocketКлиент1" id="3b57f824-a80e-4963-b7d2-e2bbaeb75322" configVersion="5a8d057e3e8e6345b4e52e2bfe88985900000000"/>
-		<Metadata name="WebSocketClient.WebSocketКлиент1.Module" id="3b57f824-a80e-4963-b7d2-e2bbaeb75322.0" configVersion="b5865d7c5cb6a74a9d0b84efa64b7c7b00000000"/>
+		<Metadata name="Configuration.WebSocketLearn" id="f3fe51db-d909-4636-a18e-49e946b8cdae" configVersion="3c8b24865e700f4da02e97c30e2a951900000000"/>
+		<Metadata name="Configuration.WebSocketLearn.HomePageWorkArea" id="be0273d9-146c-45c9-b40f-6caa78c66ee4.8" configVersion="0054a09ab968f14ebcf2f936d2ac838800000000"/>
+		<Metadata name="Configuration.WebSocketLearn.SessionModule" id="be0273d9-146c-45c9-b40f-6caa78c66ee4.7" configVersion="8f9b7a8d051cbd46b83c683ba496f40000000000"/>
+		<Metadata name="DataProcessor.УправлениеWebSockets" id="690cf8a1-bd76-4838-84cd-5906996d4931" configVersion="43945db9b45eea4eb62c5eeb77b9279800000000"/>
+		<Metadata name="DataProcessor.УправлениеWebSockets.Form.Форма" id="8b0e7b43-9321-44a6-ad91-882b1de20b19" configVersion="1d805406353b3a4fa7809ac75fdfb42400000000"/>
+		<Metadata name="DataProcessor.УправлениеWebSockets.Form.Форма.Form" id="8b0e7b43-9321-44a6-ad91-882b1de20b19.0" configVersion="41047b0af57e3042b9639a47ce55c88c00000000"/>
+		<Metadata name="Language.Русский" id="a2f8d1dd-f46d-4f5d-86b5-f30f24ff5745" configVersion="ac8ff1781e80cb428e95334b12c635d800000000"/>
+		<Metadata name="SessionParameter.КоличествоСообщений" id="398b8b1a-6b67-4041-a09a-81937b694644" configVersion="4517bc93f79c7345823eaf9aec7d1f5100000000"/>
+		<Metadata name="SessionParameter.НачалоЗамера" id="578af259-abda-417c-ae80-75d116517f60" configVersion="e42bc315824c15428da1b610c7d4b16400000000"/>
+		<Metadata name="WebSocketClient.WebSocketКлиент1" id="3b57f824-a80e-4963-b7d2-e2bbaeb75322" configVersion="4a0961e37f29f64694d519dae814aef700000000"/>
+		<Metadata name="WebSocketClient.WebSocketКлиент1.Module" id="3b57f824-a80e-4963-b7d2-e2bbaeb75322.0" configVersion="c14a94b17f69444aa3d1988cd9c8368200000000"/>
 	</ConfigVersions>
 </ConfigDumpInfo>
