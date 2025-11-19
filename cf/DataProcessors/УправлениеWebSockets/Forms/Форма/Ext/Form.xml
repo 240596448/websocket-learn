@@ -12,6 +12,11 @@
 				<CommandName>Form.Command.Отключить</CommandName>
 				<ExtendedTooltip name="ФормаОтключитьРасширеннаяПодсказка" id="12"/>
 			</Button>
+			<Button name="ФормаЗамер" id="13">
+				<Type>CommandBarButton</Type>
+				<CommandName>Form.Command.Замер</CommandName>
+				<ExtendedTooltip name="ФормаЗамерРасширеннаяПодсказка" id="14"/>
+			</Button>
 		</ChildItems>
 	</AutoCommandBar>
 	<Events>
@@ -112,6 +117,21 @@
 				</v8:item>
 			</ToolTip>
 			<Action>Отключить</Action>
+		</Command>
+		<Command name="Замер" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Замер</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Замер</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Action>Замер</Action>
 		</Command>
 	</Commands>
 </Form>
