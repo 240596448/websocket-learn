@@ -30,7 +30,7 @@ def on_client_disconnect(websocket: websockets.WebSocketServerProtocol):
         del benchmark_stats[websocket]
 
 
-async def handle_client(websocket: websockets.WebSocketServerProtocol, path: str, interval: float):
+async def handle_client(websocket: websockets.WebSocketServerProtocol, interval: float):
     """Обработка подключения клиента"""
     client_id = get_client_id(websocket)
     client_manager.add_client(websocket)
@@ -96,8 +96,8 @@ async def handle_client(websocket: websockets.WebSocketServerProtocol, path: str
 
 def create_handler(interval: float):
     """Создает обработчик с параметром interval"""
-    async def handler(websocket: websockets.WebSocketServerProtocol, path: str):
-        await handle_client(websocket, path, interval)
+    async def handler(websocket: websockets.WebSocketServerProtocol):
+        await handle_client(websocket, interval)
     return handler
 
 

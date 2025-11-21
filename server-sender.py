@@ -54,7 +54,7 @@ async def send_messages(websocket: websockets.WebSocketServerProtocol, num_messa
     print(f"{'='*60}\n")
 
 
-async def handle_client(websocket: websockets.WebSocketServerProtocol, path: str):
+async def handle_client(websocket: websockets.WebSocketServerProtocol):
     """Обработка подключения клиента"""
     client_id = get_client_id(websocket)
     client_manager.add_client(websocket)
